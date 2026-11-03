@@ -2,9 +2,25 @@
   "name": "kolavid",
   "version": "0.1.0",
   "description": "Official JavaScript and TypeScript client for the KolaVid API: turn a prompt, text or web page into a narrated whiteboard explainer video.",
-  "keywords": ["kolavid", "video", "whiteboard", "explainer", "api", "sdk", "ai"],
+  "keywords": [
+    "kolavid",
+    "video",
+    "whiteboard",
+    "explainer",
+    "api",
+    "sdk",
+    "ai"
+  ],
   "homepage": "https://kolavid.com/developers",
-  "bugs": { "email": "support@kolavid.com" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kola-Labs-Ltd/kolavid-mcp.git",
+    "directory": "js"
+  },
+  "bugs": {
+    "url": "https://github.com/Kola-Labs-Ltd/kolavid-mcp/issues",
+    "email": "support@kolavid.com"
+  },
   "license": "MIT",
   "author": "Kola Labs Ltd <support@kolavid.com>",
   "type": "module",
@@ -23,9 +39,16 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md", "CHANGELOG.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "sideEffects": false,
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test test/client.test.mjs",

@@ -36,6 +36,8 @@ httpx = ["httpx>=0.24"]
 [project.urls]
 Homepage = "https://kolavid.com"
 Documentation = "https://kolavid.com/developers"
+Source = "https://github.com/Kola-Labs-Ltd/kolavid-mcp"
+Issues = "https://github.com/Kola-Labs-Ltd/kolavid-mcp/issues"
 
 [tool.hatch.version]
 path = "src/kolavid/_version.py"
