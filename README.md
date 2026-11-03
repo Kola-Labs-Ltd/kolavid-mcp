@@ -58,7 +58,7 @@ Poll `GET /api/v1/videos/{id}` until `status` is `completed`, then download `vid
 |---|---|---|
 | Folder | [`python/`](python) | [`js/`](js) |
 | Runtime | Python 3.9+, no dependencies | Node 18+, browsers, Deno, Bun |
-| Install | `pip install "git+https://github.com/Kola-Labs-Ltd/kolavid#subdirectory=python"` (PyPI package coming) | npm package coming; build from `js/` meanwhile |
+| Install | `pip install "git+https://github.com/Kola-Labs-Ltd/kolavid-mcp#subdirectory=python"` (PyPI package coming) | npm package coming; build from `js/` meanwhile |
 
 ```python
 from kolavid import KolaVid
