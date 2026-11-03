@@ -1,3 +1,5 @@
+<img src="logo.png" alt="KolaVid" width="96" height="96">
+
 # KolaVid: whiteboard explainer videos from your chat, your code or your agent
 
 [KolaVid](https://kolavid.com) turns a topic, a text or a web page into a narrated whiteboard explainer video
