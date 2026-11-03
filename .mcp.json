@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "kolavid": {
+      "type": "http",
+      "url": "https://kolavid.com/mcp"
+    }
+  }
+}

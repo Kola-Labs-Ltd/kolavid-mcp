@@ -1,0 +1,62 @@
+# Test and publish the kolavid npm package (js).
+# To use: copy to .github/workflows/sdk-js.yml. Publishing uses npm trusted publishing (OIDC, npm CLI 11.5.1+): on
+# npmjs.com, package "kolavid" > Settings > Trusted publisher, add this repository and workflow "sdk-js.yml". Until the
+# package exists (the first publish is by hand, see sdk/PUBLISH.md) or as a fallback, set the secret NPM_TOKEN to a
+# granular automation token.
+# Release: bump package.json "version" + src/version.ts + CHANGELOG.md, then push a tag "sdk-js-v<version>".
+name: sdk-js
+
+on:
+  push:
+    tags: ["sdk-js-v*"]
+  pull_request:
+    paths: ["js/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: js
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18", "20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/sdk-js-v')
+    needs: test
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm@latest
+      - name: The tag matches the package version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          test "sdk-js-v$version" = "${GITHUB_REF_NAME}" || { echo "Tag ${GITHUB_REF_NAME} != version $version"; exit 1; }
+          grep -q "\"$version\"" src/version.ts || { echo "src/version.ts is not $version"; exit 1; }
+      - run: npm install --no-audit --no-fund
+      # prepublishOnly builds and tests again. Add --provenance once the repository is public.
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

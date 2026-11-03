@@ -1,0 +1,72 @@
+# Test and publish the kolavid Python SDK (python) to PyPI.
+# To use: copy to .github/workflows/sdk-python.yml. Publishing uses PyPI trusted publishing (no token): on pypi.org add a
+# trusted publisher for this repository, workflow "sdk-python.yml", environment "pypi" (see sdk/PUBLISH.md).
+# Release: bump src/kolavid/_version.py + CHANGELOG.md, then push a tag "sdk-python-v<version>" (e.g. sdk-python-v0.1.0).
+name: sdk-python
+
+on:
+  push:
+    tags: ["sdk-python-v*"]
+  pull_request:
+    paths: ["python/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: python
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests (standard library only)
+        run: python -m unittest -v
+      - name: Unit tests with httpx installed
+        if: matrix.python == '3.12'
+        run: pip install "httpx>=0.24" && python -m unittest
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: The tag matches the package version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          version=$(python -c "import re;print(re.search(r'\"(.+)\"', open('src/kolavid/_version.py').read()).group(1))")
+          test "sdk-python-v$version" = "${GITHUB_REF_NAME}" || { echo "Tag ${GITHUB_REF_NAME} != version $version"; exit 1; }
+      - run: pip install build twine
+      - run: python -m build
+      - run: twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: python/dist/
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/sdk-python-v')
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

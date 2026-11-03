@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kolavid"
+dynamic = ["version"]
+description = "Official Python client for the KolaVid API: turn a prompt, text or web page into a narrated whiteboard explainer video."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Kola Labs Ltd", email = "support@kolavid.com" }]
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["kolavid", "video", "whiteboard", "explainer", "api", "sdk", "ai"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Multimedia :: Video",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+httpx = ["httpx>=0.24"]
+
+[project.urls]
+Homepage = "https://kolavid.com"
+Documentation = "https://kolavid.com/developers"
+
+[tool.hatch.version]
+path = "src/kolavid/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kolavid"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/kolavid", "tests", "README.md", "CHANGELOG.md", "LICENSE", "pyproject.toml"]
